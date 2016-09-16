@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/blue_900</color>
+    <color name="colorPrimaryDark">@color/blue_900</color>
+    <color name="colorAccent">@color/blue_900</color>
+    <color name="white_trans">#BFffffff</color>
+
+    <color name="blue_900">#0D47A1</color>
+    <color name="orange_800">#EF6C00</color>
+    <color name="grey_200">#EEEEEE</color>
+    <color name="grey_400">#BDBDBD</color>
+    <color name="selector_color_ripple">@android:color/darker_gray</color>
+    <color name="main_trans50">#801d2340</color>
+    <color name="btn_verificar">@color/colorPrimary</color>
+    <color name="ripple_button_verificar">#f2e1ecf6</color>
+
+</resources>

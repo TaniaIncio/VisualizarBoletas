@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Mis Boletas</string>
+    <string name="iniciarsesion_lbliniciarsesion">Iniciar Sesion</string>
+    <string name="listaboletas_lbl_todos">Todos</string>
+    <string name="listaboletas_lbl_noleidos">No Leídos</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="busquedaboletas_lbl_mes">Mes</string>
+    <string name="busquedaboletas_lbl_anio">Año</string>
+    <string name="busquedaboletas_lbl_mensaje">Seleccione mes y año para encontrar una boleta</string>
+    <string name="cambioclave_lbl_claveanterior">Clave actual</string>
+    <string name="cambioclave_lbl_clavenueva">Nueva clave</string>
+    <string name="cambioclave_lbl_clavenueva_repeat">Confirme nueva clave</string>
+    <string name="cambioclave_btn_guardar">Guardar</string>
+
+
+</resources>

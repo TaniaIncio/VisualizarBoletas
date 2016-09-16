@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.tincio.visualizarboletas.presentation.activity.SplashActivity">
+    <com.flaviofaria.kenburnsview.KenBurnsView
+        android:src="@mipmap/workers"
+        android:id="@+id/imagen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:alpha="0.0"
+        android:src="@mipmap/icono"
+        android:layout_marginBottom="15dp"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/welcome_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Mis Boletas"
+        android:visibility="gone"
+        android:textSize="25sp"
+        android:layout_margin="5dp"
+        android:textColor="@android:color/white" />
+</RelativeLayout>
