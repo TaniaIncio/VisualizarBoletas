@@ -1,8 +1,6 @@
 package com.tincio.visualizarboletas.presentation.fragment;
 
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,13 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tincio.visualizarboletas.R;
-import com.tincio.visualizarboletas.adapter.RecyclerBoletasAdapter;
+import com.tincio.visualizarboletas.presentation.adapter.RecyclerBoletasAdapter;
 import com.tincio.visualizarboletas.data.model.Boleta;
 import com.tincio.visualizarboletas.presentation.util.Images;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;

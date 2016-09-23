@@ -1,4 +1,4 @@
-package com.tincio.visualizarboletas.adapter;
+package com.tincio.visualizarboletas.presentation.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

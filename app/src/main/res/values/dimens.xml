@@ -7,4 +7,10 @@
     <dimen name="rad_rectangle">5dp</dimen>
     <dimen name="padd_layout_verificar">17dp</dimen>
     <dimen name="txt_btn_verificar">16sp</dimen>
+    <dimen name="sp_title_login">10sp</dimen>
+    <dimen name="marg_title_login">4dp</dimen>
+    <dimen name="pad_btn_login">20dp</dimen>
+    <dimen name="height_icon_login">80dp</dimen>
+    <dimen name="width_icon_login">80dp</dimen>
+    <dimen name ="marg_view_login">20dp</dimen>
 </resources>

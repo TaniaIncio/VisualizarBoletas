@@ -1,6 +1,5 @@
 package com.tincio.visualizarboletas.presentation.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,14 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import com.tincio.visualizarboletas.R;
-import com.tincio.visualizarboletas.adapter.OpcionMenuAdapter;
+import com.tincio.visualizarboletas.presentation.adapter.OpcionMenuAdapter;
 import com.tincio.visualizarboletas.data.model.OpcionMenu;
 import com.tincio.visualizarboletas.presentation.fragment.BusquedaBoletasFragment;
 import com.tincio.visualizarboletas.presentation.fragment.CambioClaveFragment;
-import com.tincio.visualizarboletas.presentation.fragment.DetalleBoletaFragment;
 import com.tincio.visualizarboletas.presentation.fragment.ListadoBoletasFragment;
 
 import java.util.ArrayList;

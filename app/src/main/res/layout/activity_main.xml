@@ -12,15 +12,15 @@
         android:gravity="center"
         android:layout_alignParentTop="true">
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/width_icon_login"
+        android:layout_height="@dimen/height_icon_login"
         android:src="@mipmap/icono"/>
     </LinearLayout>
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="20dp"
+        android:layout_margin="@dimen/marg_view_login"
         android:layout_weight="1"
         android:background="@android:color/white"
         android:layout_alignParentBottom="true"
@@ -30,27 +30,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="10sp"
-                android:layout_marginLeft="4dp"
-                android:text="Usuario"/>
-            <EditText android:id="@+id/input_email"
+                android:textSize="@dimen/sp_title_login"
+                android:layout_marginLeft="@dimen/marg_title_login"
+                android:text="@string/title_usuario"/>
+            <EditText android:id="@+id/input_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorPrimary"
-                android:layout_marginBottom="4dp"
-                android:hint="Usuario" />
+                android:layout_marginBottom="@dimen/marg_title_login"
+                android:hint="@string/title_usuario" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:textSize="10sp"
-                android:layout_marginLeft="4dp"
-                android:text="Contraseña"/>
-            <EditText android:id="@+id/input"
+                android:textSize="@dimen/sp_title_login"
+                android:layout_marginLeft="@dimen/marg_title_login"
+                android:text="@string/title_contrasena"/>
+            <EditText android:id="@+id/input_clave"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorPrimary"
-                android:hint="Contraseña" />
+                android:hint="@string/title_contrasena" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,15 +64,9 @@
                     android:textStyle="bold"
                     android:textAllCaps="true"
                     android:clickable="true"
-                    android:padding="20dp"
+                    android:padding="@dimen/pad_btn_login"
                     android:background="@drawable/selector_iniciarsesion"
                     android:id="@+id/btn_login"/>
             </LinearLayout>
     </LinearLayout>
-  <!--  <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@mipmap/fndo"
-        android:scaleType="centerCrop"/>
--->
 </RelativeLayout>
