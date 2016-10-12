@@ -14,4 +14,5 @@
     <color name="btn_verificar">@color/colorPrimary</color>
     <color name="ripple_button_verificar">#f2e1ecf6</color>
 
+    <color name="orange_800_transp">#88EF6C00</color>
 </resources>

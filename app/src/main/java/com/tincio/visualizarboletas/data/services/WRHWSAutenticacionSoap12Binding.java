@@ -443,8 +443,8 @@ public class WRHWSAutenticacionSoap12Binding
     
     public void processInjectionBasedOnCurrentContext(final String target ) throws Exception
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-    }
+
+   }
     
     public android.os.AsyncTask< Void, Void, WRHOperationResult< Void>> processInjectionBasedOnCurrentContextAsync(final String target)
     {

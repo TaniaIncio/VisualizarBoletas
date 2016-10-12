@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.tincio.visualizarboletas.R;
@@ -21,7 +24,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements LoginView{
+public class MainActivity extends AppCompatActivity implements LoginView, AdapterView.OnItemSelectedListener{
 
     @Bind(R.id.btn_login)
     TextView btnLogin;
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements LoginView{
     TextView txtUsuario;
     @Bind(R.id.input_clave)
     TextView txtClave;
+    @Bind(R.id.spinner_empresa)
+    Spinner spinnerEmpresa;
     ProgressDialog progress;
     LoginPresenter presenter;
     String TAG = MainActivity.class.getSimpleName();
@@ -50,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements LoginView{
                 startActivity(new Intent(getApplicationContext(), NavigationMenuActivity.class));
             }
         });*/
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.order_movies,R.layout.row_spinner_empresa);
+        spinnerEmpresa.setAdapter(adapter);
+        spinnerEmpresa.setOnItemSelectedListener(this);
     }
 
     @OnClick(R.id.btn_login)
@@ -88,5 +96,15 @@ public class MainActivity extends AppCompatActivity implements LoginView{
     public void closeLoading() {
         if(progress!=null)
             progress.dismiss();
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 }

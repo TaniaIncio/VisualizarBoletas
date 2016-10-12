@@ -13,16 +13,14 @@ package com.tincio.visualizarboletas.data.services;
 //---------------------------------------------------
 
 
-
-
 import org.ksoap2.HeaderProperty;
-import org.ksoap2.serialization.*;
-import org.ksoap2.transport.*;
-import org.kxml2.kdom.Element;
+import org.ksoap2.serialization.PropertyInfo;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.transport.HttpTransportSE;
+import org.ksoap2.transport.HttpsTransportSE;
+import org.ksoap2.transport.Transport;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -409,17 +407,70 @@ public class WRHWSAutenticacionSoap11Binding
             }
         }) ;
     }
-    
-    public String getCambioClave(final String codAplicacion,final String idEmpresa,final String nomUsuario,final String clave,final String nuevaClave ) throws Exception
+
+    interface WWOIWcfMethod
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        WRHExtendedSoapSerializationEnvelope CreateSoapEnvelope() throws Exception;
+
+        Object ProcessResult(WRHExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception;
     }
-    
-    public android.os.AsyncTask< Void, Void, WRHOperationResult< String>> getCambioClaveAsync(final String codAplicacion,final String idEmpresa,final String nomUsuario,final String clave,final String nuevaClave)
+
+    public WWOUsuarioClave getCambioClave(final String codAplicacion,final String idEmpresa,final String nomUsuario,final String clave,final String nuevaClave ) throws Exception
     {
-        return executeAsync(new WRHFunctions.IFunc< String>() {
-            public String Func() throws Exception {
+        return (WWOUsuarioClave)execute(new WRHIWcfMethod()
+        {
+            @Override
+            public WRHExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+                WRHExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("http://wsdocuservutil.gmd.com.pe", "getCambioClave");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info=null;
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="codAplicacion";
+                __info.type=PropertyInfo.INTEGER_CLASS;
+                __info.setValue(codAplicacion);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="idEmpresa";
+                __info.type=PropertyInfo.INTEGER_CLASS;
+                __info.setValue(idEmpresa);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="nomUsuario";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(nomUsuario!=null?nomUsuario:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="clave";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(clave!=null?clave:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="nuevaClave";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(nuevaClave!=null?nuevaClave:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(WRHExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception {
+                return (WWOUsuarioClave)getResult(WWOUsuarioClave.class,result,"return",__envelope);
+            }
+
+        },"urn:getCambioClave");
+    }
+
+    public android.os.AsyncTask< Void, Void, WRHOperationResult< WWOUsuarioClave>> getCambioClaveAsync(final String codAplicacion,final String idEmpresa,final String nomUsuario,final String clave,final String nuevaClave)
+    {
+        return executeAsync(new WRHFunctions.IFunc< WWOUsuarioClave>() {
+            public WWOUsuarioClave Func() throws Exception {
                 return getCambioClave( codAplicacion,idEmpresa,nomUsuario,clave,nuevaClave);
             }
         });
@@ -457,16 +508,30 @@ public class WRHWSAutenticacionSoap11Binding
         }) ;
     }
     
-    public String getEmpresas( ) throws Exception
+    public WWOEmpresa getEmpresas( ) throws Exception
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+        return (WWOEmpresa)execute(new WRHIWcfMethod()
+        {
+            @Override
+            public WRHExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+                WRHExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("http://wsdocuservutil.gmd.com.pe", "getEmpresas");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                return __envelope;
+            }
+
+            @Override
+            public Object ProcessResult(WRHExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception {
+                return (WWOEmpresa)getResult(WWOEmpresa.class,result,"return",__envelope);
+            }
+        },"urn:getEmpresas");
     }
     
-    public android.os.AsyncTask< Void, Void, WRHOperationResult< String>> getEmpresasAsync()
+    public android.os.AsyncTask< Void, Void, WRHOperationResult< WWOEmpresa>> getEmpresasAsync()
     {
-        return executeAsync(new WRHFunctions.IFunc< String>() {
-            public String Func() throws Exception {
+        return executeAsync(new WRHFunctions.IFunc< WWOEmpresa>() {
+            public WWOEmpresa Func() throws Exception {
                 return getEmpresas( );
             }
         });

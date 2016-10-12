@@ -19,5 +19,6 @@
     <!--placeholder-->
     <string name="title_usuario">Usuario</string>
     <string name="title_contrasena">Contraseña</string>
+    <string name="title_empresa">Empresa</string>
 
 </resources>

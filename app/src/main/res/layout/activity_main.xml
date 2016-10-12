@@ -14,6 +14,7 @@
     <ImageView
         android:layout_width="@dimen/width_icon_login"
         android:layout_height="@dimen/height_icon_login"
+        android:visibility="gone"
         android:src="@mipmap/icono"/>
     </LinearLayout>
         <LinearLayout
@@ -26,6 +27,19 @@
         android:layout_alignParentBottom="true"
         android:padding="10dp"
         >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/sp_title_login"
+                android:layout_marginLeft="@dimen/marg_title_login"
+                android:text="@string/title_empresa"/>
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_marginBottom="@dimen/marg_title_login"
+                android:id="@+id/spinner_empresa"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

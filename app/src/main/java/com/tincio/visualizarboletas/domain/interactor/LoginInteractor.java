@@ -1,5 +1,7 @@
 package com.tincio.visualizarboletas.domain.interactor;
 
+import android.os.AsyncTask;
+
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
 import com.tincio.visualizarboletas.data.services.WRHWSAutenticacionSoap11Binding;
@@ -17,15 +19,39 @@ public class LoginInteractor {
     }
 
     public void logueUser(UserRequest request){
+        LogueoUserTask task = new LogueoUserTask(request);
+        task.execute();
+    }
 
-        WRHWSAutenticacionSoap11Binding soap11Binding = new WRHWSAutenticacionSoap11Binding();
-        //getUsuarioLogin(final Integer codAplicacion,final Integer idEmpresa,final String usuario,final String clave,final String ip,final String keyios,final String keyandroid ) throws Exception
-        try{
-            WRHUsuarioDatos dataUser= soap11Binding.getUsuarioLogin(request.getCodAplicacion(), request.getIdEmpresa(), request.getUsername(),
+    private class LogueoUserTask extends AsyncTask<Void, Void, WRHUsuarioDatos>{
+
+        UserRequest request= null;
+        LogueoUserTask(UserRequest request){
+            this.request = request;
+        }
+
+        @Override
+        protected WRHUsuarioDatos doInBackground(Void... voids) {
+            WRHUsuarioDatos datos=null;
+            try{
+                WRHWSAutenticacionSoap11Binding soap11Binding = new WRHWSAutenticacionSoap11Binding();
+                datos=  soap11Binding.getUsuarioLogin(request.getCodAplicacion(), request.getIdEmpresa(), request.getUsername(),
                     request.getClave(), request.getIp(), request.getKeyIos(), request.getKeyAndroid());
-            callback.onResponse(dataUser);
-        }catch(Exception e){
-            e.printStackTrace();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return datos;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(WRHUsuarioDatos wrhUsuarioDatos) {
+            callback.onResponse(wrhUsuarioDatos);
         }
     }
 }

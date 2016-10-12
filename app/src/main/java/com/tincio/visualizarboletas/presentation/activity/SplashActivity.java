@@ -2,6 +2,7 @@ package com.tincio.visualizarboletas.presentation.activity;
 
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.flaviofaria.kenburnsview.Transition;
 import com.tincio.visualizarboletas.R;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,7 +51,9 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             public void onTransitionEnd(Transition transition) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("listaEmpresa",new ArrayList<>());
+                startActivity(intent);
                 finish();
             }
         });
