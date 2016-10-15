@@ -67,6 +67,13 @@
         android:layout_height="1dp"
         android:layout_marginBottom="10dp"
         android:background="@color/orange_800"></View>
-    <include
-        layout="@layout/linear_row_boletapago_seleccionada"></include>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/rec_boletas_busqueda"
+        tools:listitem="@layout/linear_row_boletapago">
+
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>

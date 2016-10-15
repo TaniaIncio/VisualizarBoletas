@@ -11,11 +11,15 @@ import android.widget.TextView;
 
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.model.Boleta;
+import com.tincio.visualizarboletas.data.services.WRHDocumento;
+import com.tincio.visualizarboletas.presentation.util.Utils;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.internal.Util;
 
 /**
  * Created by juan on 25/05/2016.
@@ -23,8 +27,8 @@ import butterknife.ButterKnife;
 public class RecyclerBoletasAdapter extends RecyclerView.Adapter<RecyclerBoletasAdapter.BoletaViewHolder>{
 
     Context context;
-    List<Boleta> list;
-    public RecyclerBoletasAdapter(List<Boleta> list){
+    List<WRHDocumento> list;
+    public RecyclerBoletasAdapter(List<WRHDocumento> list){
         this.list= list;
     }
 
@@ -36,15 +40,15 @@ public class RecyclerBoletasAdapter extends RecyclerView.Adapter<RecyclerBoletas
         return viewHolder;
     }
 
-    Boleta opc;
+    WRHDocumento opc;
     @Override
     public void onBindViewHolder(BoletaViewHolder holder, int position) {
         opc = list.get(position);
-        holder.txtNombre.setText(opc.getNombre());
-        String[] fechas = opc.getDate().split("-");
-        holder.txtFechaDia.setText(String.valueOf(fechas[0]));
-        holder.txtFechaMes.setText(String.valueOf(fechas[1]));
-        holder.txtFechaAnio.setText(String.valueOf(fechas[2]));
+        holder.txtNombre.setText(opc.periodo);
+        Date date = opc.fechaEnvio;
+        holder.txtFechaDia.setText(Utils.getDay(date));
+        holder.txtFechaMes.setText(Utils.getMonthName(date));
+        holder.txtFechaAnio.setText(Utils.getYear(date));
     }
 
     @Override
@@ -74,14 +78,14 @@ public class RecyclerBoletasAdapter extends RecyclerView.Adapter<RecyclerBoletas
                 @Override
                 public void onClick(View v) {
                     if (onItemClickLIstener != null) {
-                        onItemClickLIstener.setOnItemClickListener(list.get(getPosition()));
+                        onItemClickLIstener.setOnItemClickListener(list.get(getAdapterPosition()));
                     }
                 }
             });
         }
     }
 
-    public void setList(List<Boleta> lista){
+    public void setList(List<WRHDocumento> lista){
         try{
             this.list = lista;
         }catch(Exception e){
@@ -91,7 +95,7 @@ public class RecyclerBoletasAdapter extends RecyclerView.Adapter<RecyclerBoletas
 
     public OnItemClickListener onItemClickLIstener;
     public interface OnItemClickListener{
-        public void setOnItemClickListener(Boleta Boleta);
+        public void setOnItemClickListener(WRHDocumento Boleta);
     }
 
     public void setOnItemClickLIstener(OnItemClickListener onItemClickListener){

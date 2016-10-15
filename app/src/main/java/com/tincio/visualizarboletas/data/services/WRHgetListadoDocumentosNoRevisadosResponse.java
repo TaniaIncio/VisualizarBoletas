@@ -59,6 +59,5 @@ public class WRHgetListadoDocumentosNoRevisadosResponse extends Vector< WRHDocum
     @Override
     public void setProperty(int arg0, Object arg1) {
     }
-
     
 }

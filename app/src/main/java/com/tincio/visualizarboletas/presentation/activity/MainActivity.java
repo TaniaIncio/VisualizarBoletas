@@ -3,6 +3,7 @@ package com.tincio.visualizarboletas.presentation.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.UserRequest;
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
     ProgressDialog progress;
     LoginPresenter presenter;
     String TAG = MainActivity.class.getSimpleName();
+
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,17 +49,13 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         ButterKnife.bind(this);
         getSupportActionBar().hide();
         presenter = new LoginPresenter(this);
+        preferences = getSharedPreferences(getString(R.string.preferences_app), MODE_PRIVATE);
+        //Log.i(TAG, Utils.getIp(this));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-      /*  btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), NavigationMenuActivity.class));
-            }
-        });*/
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.order_movies,R.layout.row_spinner_empresa);
         spinnerEmpresa.setAdapter(adapter);
         spinnerEmpresa.setOnItemSelectedListener(this);
@@ -65,10 +66,10 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         try{
             UserRequest request = new UserRequest();
             request.setCodAplicacion(1);
-            request.setIdEmpresa(5);
-            request.setUsername("80605606");
-            request.setClave("80605606");
-            request.setIp("192.168.2.365");
+            request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),1));
+            request.setUsername(txtUsuario.getText().toString());
+            request.setClave(txtClave.getText().toString());
+            request.setIp(Utils.getIp(this));
             request.setKeyIos("");
             request.setKeyAndroid("");
             presenter.logueoUser(request);
@@ -79,7 +80,11 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
 
     @Override
     public void getUsuarioLogueado(WRHUsuarioDatos userLogueado) {
-        Log.i(TAG, userLogueado.sNombres);
+        if(userLogueado.resultado){
+            startActivity(new Intent(this,NavigationMenuActivity.class));
+        }else{
+            Toast.makeText(this, "Usuario y/o clave incorrectos", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -100,7 +105,9 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
+        editor = preferences.edit();
+        editor.putInt(getString(R.string.preferences_idempresa), i+1);
+        editor.commit();
     }
 
     @Override

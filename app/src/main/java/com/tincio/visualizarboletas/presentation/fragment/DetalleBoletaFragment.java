@@ -2,25 +2,19 @@ package com.tincio.visualizarboletas.presentation.fragment;
 
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.ImageView;
 
 import com.tincio.visualizarboletas.R;
 
-import java.io.File;
-
-import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetalleBoletaFragment extends Fragment {
+public class DetalleBoletaFragment extends Fragment{
 
     public static final String TAG= "DetalleBoletaFragment";
    /* @Bind(R.id.iv_photo)
@@ -35,7 +29,6 @@ public class DetalleBoletaFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_detalle_boleta, container, false);
         ButterKnife.bind(this,view);
         return view;
@@ -62,7 +55,5 @@ public class DetalleBoletaFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
-
 
 }

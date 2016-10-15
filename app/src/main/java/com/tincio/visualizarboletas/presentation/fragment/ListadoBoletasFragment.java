@@ -14,9 +14,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tincio.visualizarboletas.R;
+import com.tincio.visualizarboletas.data.request.ListadoBoletasRequest;
+import com.tincio.visualizarboletas.data.services.WRHDocumento;
+import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosNoRevisadosResponse;
+import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosResponse;
 import com.tincio.visualizarboletas.presentation.adapter.RecyclerBoletasAdapter;
 import com.tincio.visualizarboletas.data.model.Boleta;
+import com.tincio.visualizarboletas.presentation.presenter.ListadoBoletasPresenter;
 import com.tincio.visualizarboletas.presentation.util.Images;
+import com.tincio.visualizarboletas.presentation.view.ListadoBoletasFragmentView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,8 +34,8 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ListadoBoletasFragment extends Fragment {
-    
+public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFragmentView{
+
     public static final String TAG="Mis Boletas";
     @Bind(R.id.rec_boletas)
     RecyclerView rcvBoletas;
@@ -43,6 +49,10 @@ public class ListadoBoletasFragment extends Fragment {
     ImageView imgNoLeido;
     @Bind(R.id.listaboletas_img_todos)
     ImageView imgTodos;
+
+    ListadoBoletasPresenter presenter;
+    ListadoBoletasRequest request = new ListadoBoletasRequest();
+    List<WRHDocumento> lista;
     public ListadoBoletasFragment() {
         // Required empty public constructor
     }
@@ -52,8 +62,7 @@ public class ListadoBoletasFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    List<Boleta> lista2;
-    List<Boleta> lista;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,61 +71,49 @@ public class ListadoBoletasFragment extends Fragment {
         ButterKnife.bind(this,view);
         layoutManager = new LinearLayoutManager(getContext());
         rcvBoletas.setLayoutManager(layoutManager);
-        lista =new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-       // Boleta mBoleta = new Boleta(1,calendar.getTime(), "BOL - 001 ",true);
-        lista.add(new Boleta(1,"31-Jul-2016", "BOL - 0011 ",true));
-        lista.add(new Boleta(1,"30-Jun-2016", "BOL - 0010 ",true));
-        lista.add(new Boleta(1,"31-May-2016", "BOL - 0009 ",true));
-        lista.add(new Boleta(1,"30-Abr-2016", "BOL - 0008 ",true));
-        lista.add(new Boleta(1,"31-Mar-2016", "BOL - 0007 ",true));
-        lista.add(new Boleta(1,"29-Feb-2016", "BOL - 0006 ",true));
-        lista.add(new Boleta(1,"31-Ene-2016", "BOL - 0005 ",true));
-        lista.add(new Boleta(1,"31-Dic-2016", "BOL - 0004 ",true));
-        lista.add(new Boleta(1,"30-Nov-2016", "BOL - 0003 ",true));
-        lista.add(new Boleta(1,"31-Oct-2016", "BOL - 0002 ",true));
-        lista.add(new Boleta(1,"30-Ago-2016", "BOL - 0001 ",true));
-//
-        lista2 =new ArrayList<>();
-        // Boleta mBoleta = new Boleta(1,calendar.getTime(), "BOL - 001 ",true);
-        lista2.add(new Boleta(1,"31-Jul-2016", "BOL - 0011 ",true));
-        lista2.add(new Boleta(1,"30-Jun-2016", "BOL - 0010 ",true));
-        lista2.add(new Boleta(1,"31-May-2016", "BOL - 0009 ",true));
-        lista2.add(new Boleta(1,"30-Abr-2016", "BOL - 0008 ",true));
-
-        adapter = new RecyclerBoletasAdapter(lista);
-        rcvBoletas.setAdapter(adapter);
-
-        linearTodos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.setList(lista);
-                adapter.notifyDataSetChanged();
-                imgTodos.setImageDrawable(Images.getDrawableByName(getActivity(), "rgs_ico_date"));
-                imgNoLeido.setImageDrawable(Images.getDrawableByName(getActivity(), "cnt_ico_email_big"));
-            }
-        });
-        linearNoLeido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                adapter.setList(lista2);
-                adapter.notifyDataSetChanged();
-                imgTodos.setImageDrawable(Images.getDrawableByName(getActivity(), "acc_ico_calendar"));
-                imgNoLeido.setImageDrawable(Images.getDrawableByName(getActivity(), "mss_ico_mss_detail"));
-            }
-        });
+        presenter= new ListadoBoletasPresenter(this);
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        adapter.setOnItemClickLIstener(new RecyclerBoletasAdapter.OnItemClickListener() {
+        getListaBoletas(true);
+        /**set events onclick in linearlayout*/
+
+        linearTodos.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void setOnItemClickListener(Boleta Boleta) {
-                visualizarBoleta();
+            public void onClick(View view) {
+                imgTodos.setImageDrawable(Images.getDrawableByName(getActivity(), "rgs_ico_date"));
+                imgNoLeido.setImageDrawable(Images.getDrawableByName(getActivity(), "cnt_ico_email_big"));
+                getListaBoletas(true);
             }
         });
+        linearNoLeido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imgTodos.setImageDrawable(Images.getDrawableByName(getActivity(), "acc_ico_calendar"));
+                imgNoLeido.setImageDrawable(Images.getDrawableByName(getActivity(), "mss_ico_mss_detail"));
+                getListaBoletas(false);
+            }
+        });
+    }
+
+    void getListaBoletas(Boolean tipoLeido){
+        try{
+            request.setIdEmpresa(5);
+            request.setCodAplicacion(1);
+            request.setIdTipoDocumento("1");
+            request.setNroDocumentoIdentificacion("80605606");
+            if(tipoLeido){
+                presenter.getListadoBoletas(request);
+            }else{
+                presenter.getListadoBoletasNoLeidos(request);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     void visualizarBoleta(){
@@ -127,5 +124,29 @@ public class ListadoBoletasFragment extends Fragment {
         Ft.replace(R.id.frame_base, new DetalleBoletaFragment(), TAG);
         Ft.addToBackStack(TAG);
         Ft.commit();
+    }
+
+    @Override
+    public void getListaDocumentos(WRHgetListadoDocumentosResponse documentos) {
+        lista =documentos;
+        adapter = new RecyclerBoletasAdapter(lista);
+        rcvBoletas.setAdapter(adapter);
+        adapter.setOnItemClickLIstener(new RecyclerBoletasAdapter.OnItemClickListener() {
+            @Override
+            public void setOnItemClickListener(WRHDocumento Boleta) {
+                visualizarBoleta();
+            }
+        });
+    }
+
+    @Override
+    public void getListaDocumentosNoLeidos(WRHgetListadoDocumentosNoRevisadosResponse documentos) {
+       /* lista =documentos;
+        adapter = new RecyclerBoletasAdapter(lista);
+        rcvBoletas.setAdapter(adapter);*/
+        lista =documentos;
+        adapter.setList(lista);
+        adapter.notifyDataSetChanged();
+
     }
 }
