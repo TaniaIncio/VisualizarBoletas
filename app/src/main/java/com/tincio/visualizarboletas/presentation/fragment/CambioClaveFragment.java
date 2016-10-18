@@ -1,6 +1,7 @@
 package com.tincio.visualizarboletas.presentation.fragment;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
     TextView txtClaveNuevaRepeat;
 
     CambioClavePresenter presenter;
+    SharedPreferences preferences;
 
     public static final String TAG=CambioClaveFragment.class.getSimpleName();
     public CambioClaveFragment() {
@@ -45,18 +47,22 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
         View view= inflater.inflate(R.layout.fragment_cambio_clave, container, false);
         ButterKnife.bind(this, view);
         presenter = new CambioClavePresenter(this);
+        preferences = getActivity().getSharedPreferences(getString(R.string.preferences_app), getActivity().MODE_PRIVATE);
         return view;
     }
 
     @OnClick(R.id.linear_guardar_clave)
     void onClickGuardarClave(){
-        CambioClaveRequest request = new CambioClaveRequest();
-        request.setCodAplicacion("1");
-        request.setClave("80605606");
-        request.setIdEmpresa("80605606");
-        request.setNomUsuario("80605606");
-        request.setNuevaClave("80605606");
-        presenter.cambioClave(request);
+        if(verificar()){
+            CambioClaveRequest request = new CambioClaveRequest();
+            request.setCodAplicacion("1");
+            request.setClave(txtClaveActual.getText().toString());
+            request.setIdEmpresa(String.valueOf(preferences.getInt(getString(R.string.preferences_idempresa),1)));
+            request.setNomUsuario(txtClaveActual.getText().toString());
+            request.setNuevaClave(txtClaveNueva.getText().toString());
+            presenter.cambioClave(request);
+        }
+
     }
 
     @Override
@@ -66,5 +72,27 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
         }else{
             Toast.makeText(getActivity(),"", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    Boolean verificar(){
+        if(txtClaveActual.getText().toString().equals("")){
+            Toast.makeText(getActivity(),"Por favor ingrese su clave actual", Toast.LENGTH_SHORT).show();
+            return false;
+        }else{
+            if(txtClaveNueva.getText().toString().equals("")){
+                Toast.makeText(getActivity(),"Por favor ingrese su nueva clave", Toast.LENGTH_SHORT).show();
+                return false;
+            }else{
+                if(txtClaveNuevaRepeat.getText().toString().equals("")){
+                    Toast.makeText(getActivity(),"Por favor repita su nueva clave", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        }
+        if(!txtClaveNueva.getText().toString().equals(txtClaveNuevaRepeat.getText().toString())){
+            Toast.makeText(getActivity(),"Deben coincidir las nuevas claves", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }
