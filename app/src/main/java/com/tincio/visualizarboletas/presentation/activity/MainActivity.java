@@ -15,9 +15,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
+import com.tincio.visualizarboletas.presentation.fcm.MyFirebaseInstanceIDService;
 import com.tincio.visualizarboletas.presentation.presenter.LoginPresenter;
 import com.tincio.visualizarboletas.presentation.util.Utils;
 import com.tincio.visualizarboletas.presentation.view.LoginView;
@@ -51,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         presenter = new LoginPresenter(this);
         preferences = getSharedPreferences(getString(R.string.preferences_app), MODE_PRIVATE);
         //Log.i(TAG, Utils.getIp(this));
+        //inicar fcm
+        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
+        startService(intent);
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.i("token",refreshedToken);
     }
 
     @Override
