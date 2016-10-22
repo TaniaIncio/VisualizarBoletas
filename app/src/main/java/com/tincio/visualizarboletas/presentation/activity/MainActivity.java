@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
         startService(intent);
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        Log.i("token",refreshedToken);
+//        Log.i("token",refreshedToken);
     }
 
     @Override
