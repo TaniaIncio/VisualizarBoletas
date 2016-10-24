@@ -2,16 +2,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.tincio.visualizarboletas.presentation.fragment.DetalleBoletaFragment">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="?attr/listPreferredItemHeight"
+       android:orientation="horizontal"
+       android:background="@color/grey_200"
+       android:gravity="center">
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center"
+          android:id="@+id/linear_boleta"
+          android:clickable="true"
+          android:layout_weight="1">
+         <ImageView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="5dp"
+             android:src="@mipmap/men_ico_services_off"/>
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:drawablePadding="8dp"
+             android:text="@string/tab_boletas"/>
+      </LinearLayout>
+      <View android:layout_height="wrap_content"
+          android:layout_width="1dp"
+          android:background="@color/grey_400"></View>
+      <LinearLayout
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:id="@+id/linear_cargo"
+          android:clickable="true"
+          android:gravity="center"
+          android:layout_weight="1">
+         <ImageView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_marginRight="5dp"
+             android:src="@mipmap/men_ico_services_off"/>
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:drawablePadding="8dp"
+             android:text="@string/tab_cargo"/>
+      </LinearLayout>
+
+   </LinearLayout>
+
    <android.support.v4.view.ViewPager
        xmlns:android="http://schemas.android.com/apk/res/android"
        android:id="@+id/pager"
        android:layout_width="match_parent"
        android:layout_height="match_parent" />
-   <android.support.v4.app.FragmentTabHost
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-
-   </android.support.v4.app.FragmentTabHost>
+</LinearLayout>
 </FrameLayout>

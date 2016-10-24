@@ -25,4 +25,7 @@
     <string name="preferences_app">preferences_aapp</string>
     <string name="preferences_idempresa">preferences_idempresa</string>
 
+    <string name="tab_boletas">Boleta</string>
+    <string name="tab_cargo">Cargo</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

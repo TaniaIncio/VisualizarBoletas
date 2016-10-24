@@ -63,8 +63,6 @@ public class NavigationMenuActivity extends AppCompatActivity
         changeFragment(new ListadoBoletasFragment(), "NOTAG");
         prefs = getSharedPreferences("preferences", MODE_PRIVATE);
         setTitle("Mis Boletas " + prefs.getString("sucursal", ""));
-
-        ActionBar actionBar = getSupportActionBar();
     }
 
     @Override
