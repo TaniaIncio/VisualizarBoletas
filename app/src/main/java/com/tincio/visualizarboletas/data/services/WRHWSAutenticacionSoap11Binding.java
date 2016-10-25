@@ -476,10 +476,9 @@ public class WRHWSAutenticacionSoap11Binding
         });
     }
     
-    public String obtenerPdf(final String sPeriodo,final String nTipoDocumento,final String nCodAplicacion,final String sDniUsuario,final String clave,final String nIdeEmpresa,final String sIpUsuario ) throws Exception
+    /*public String obtenerPdf(final String sPeriodo,final String nTipoDocumento,final String nCodAplicacion,final String sDniUsuario,final String clave,final String nIdeEmpresa,final String sIpUsuario ) throws Exception
     {
-/*This feature is available in Premium account, Check http://EasyWsdl.com/Payment/PremiumAccountDetails to see all benefits of Premium account*/
-        return null;    
+       return null;
     }
     
     public android.os.AsyncTask< Void, Void, WRHOperationResult< String>> obtenerPdfAsync(final String sPeriodo,final String nTipoDocumento,final String nCodAplicacion,final String sDniUsuario,final String clave,final String nIdeEmpresa,final String sIpUsuario)
@@ -489,7 +488,7 @@ public class WRHWSAutenticacionSoap11Binding
                 return obtenerPdf( sPeriodo,nTipoDocumento,nCodAplicacion,sDniUsuario,clave,nIdeEmpresa,sIpUsuario);
             }
         });
-    }
+    }*/
     
     public void processInjectionBasedOnCurrentContext(final String target ) throws Exception
     {
@@ -604,6 +603,80 @@ public class WRHWSAutenticacionSoap11Binding
 
         return new Exception(fault.faultstring);
     }
+    ////get obtener pdf
+
+    public JHADocumentoWS obtenerPdf(final String sPeriodo,final Integer nTipoDocumento,final Integer nCodAplicacion,final String sDniUsuario,final String clave,final Integer nIdeEmpresa,final String sIpUsuario ) throws java.lang.Exception
+    {
+        return (JHADocumentoWS)execute(new WRHIWcfMethod()
+        {
+            @Override
+            public WRHExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
+                WRHExtendedSoapSerializationEnvelope __envelope = createEnvelope();
+                SoapObject __soapReq = new SoapObject("http://wsdocuservutil.gmd.com.pe", "obtenerPdf");
+                __envelope.setOutputSoapObject(__soapReq);
+
+                PropertyInfo __info=null;
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="sPeriodo";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(sPeriodo!=null?sPeriodo:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="nTipoDocumento";
+                __info.type=PropertyInfo.INTEGER_CLASS;
+                __info.setValue(nTipoDocumento);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="nCodAplicacion";
+                __info.type=PropertyInfo.INTEGER_CLASS;
+                __info.setValue(nCodAplicacion);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="sDniUsuario";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(sDniUsuario!=null?sDniUsuario:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="clave";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(clave!=null?clave:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="nIdeEmpresa";
+                __info.type=PropertyInfo.INTEGER_CLASS;
+                __info.setValue(nIdeEmpresa);
+                __soapReq.addProperty(__info);
+                __info = new PropertyInfo();
+                __info.namespace="http://wsdocuservutil.gmd.com.pe";
+                __info.name="sIpUsuario";
+                __info.type=PropertyInfo.STRING_CLASS;
+                __info.setValue(sIpUsuario!=null?sIpUsuario:SoapPrimitive.NullSkip);
+                __soapReq.addProperty(__info);
+                return __envelope;
+            }
+
+            @Override
+            public java.lang.Object ProcessResult(WRHExtendedSoapSerializationEnvelope __envelope,java.lang.Object __result)throws java.lang.Exception {
+                return (JHADocumentoWS)getResult(JHADocumentoWS.class,__result,"return",__envelope);
+            }
+        },"urn:obtenerPdf");
+    }
+
+    public android.os.AsyncTask< Void, Void, WRHOperationResult< JHADocumentoWS>> obtenerPdfAsync(final String sPeriodo,final Integer nTipoDocumento,final Integer nCodAplicacion,final String sDniUsuario,final String clave,final Integer nIdeEmpresa,final String sIpUsuario)
+    {
+        return executeAsync(new WRHFunctions.IFunc< JHADocumentoWS>() {
+            public JHADocumentoWS Func() throws java.lang.Exception {
+                return obtenerPdf( sPeriodo,nTipoDocumento,nCodAplicacion,sDniUsuario,clave,nIdeEmpresa,sIpUsuario);
+            }
+        });
+    }
+
 }
 
 
