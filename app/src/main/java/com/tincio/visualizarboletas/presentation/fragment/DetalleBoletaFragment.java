@@ -3,15 +3,19 @@ package com.tincio.visualizarboletas.presentation.fragment;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +30,11 @@ import com.tincio.visualizarboletas.presentation.presenter.DetalleBoletasPresent
 import com.tincio.visualizarboletas.presentation.view.DetalleBoletasFragmentView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,6 +49,8 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
     ViewPager mViewPager;
     DetalleBoletasPresenter presenter;
+    String stringBase64Boleta;
+    String stringBase64Cargo;
     public DetalleBoletaFragment() {
         // Required empty public constructor
     }
@@ -59,19 +67,6 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
         mViewPager = (ViewPager) view.findViewById(R.id.pager);
         mViewPager.setAdapter(mDemoCollectionPagerAdapter);
         presenter = new DetalleBoletasPresenter(this);
-        try{
-            //llamar servicio web
-
-         //   byte bytes = "";
-            String bytes2="";
-          /*  bytes.getBytes();
-            OutputStream out = new FileOutputStream("/mnt/sdcard/Sample.pdf");
-            out.write(bytes.getBytes());
-            out.close();*/
-            //cargar pdf
-        }catch (Exception e){
-            Log.i(TAG,  e.toString());
-        }
 
         return view;
     }
@@ -89,7 +84,6 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     public void onResume() {
         super.onResume();
         obtenerPdf();
-   //     verDetalleBoletaPdf();
     }
 
     void obtenerPdf(){
@@ -118,15 +112,13 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
                 );*/
             }
             //+ "/Sample.pdf"
-            File file = new File(Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES), "Boletas");
-            OutputStream out = new FileOutputStream(getActivity().getFilesDir());
-            out.write(boletaPdf.bytesAcuse.getBytes());
-            out.close();
-        } catch (IOException e) {
+          //  writePdf(boletaPdf.bytesAcuse);
+
+            stringBase64Boleta = boletaPdf.bytesDocumento;
+            stringBase64Cargo = boletaPdf.bytesAcuse;
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public class DemoCollectionPagerAdapter extends FragmentPagerAdapter {
@@ -136,7 +128,15 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
 
         @Override
         public Fragment getItem(int i) {
-            Fragment fragment = new DemoObjectFragment();
+            Bundle args = new Bundle();
+            if(i==0) {
+                args.putString("documento", stringBase64Boleta);
+                args.putString("tipo", "boleta");
+            }else {
+                args.putString("documento", stringBase64Cargo);
+                args.putString("tipo", "cargo");
+            }
+            Fragment fragment = DemoObjectFragment.newInstance(args);
             return fragment;
         }
 
@@ -154,7 +154,18 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     // Instances of this class are fragments representing a single
 // object in our collection.
     public static class DemoObjectFragment extends Fragment {
-        public static final String ARG_OBJECT = "object";
+
+        static String doc;
+        static String tipo;
+
+        public static DemoObjectFragment newInstance(Bundle args){
+            DemoObjectFragment fragment = new DemoObjectFragment();
+
+            fragment.setArguments(args);
+            doc = args.getString("documento");
+            tipo = args.getString("tipo");
+            return fragment;
+        }
 
         @Override
         public View onCreateView(LayoutInflater inflater,
@@ -164,13 +175,48 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
             View rootView = inflater.inflate(
                     R.layout.fragment_detalle_boleta_tab, container, false);
             pdfView = (PDFView)rootView.findViewById(R.id.pdfview);
+            writePdf(doc, tipo);
+         /*   pdfView = (PDFView)rootView.findViewById(R.id.pdfview);
             pdfView.fromFile(getActivity().getFilesDir())
                     .defaultPage(1)
                     .showMinimap(false)
                     .enableSwipe(true)
-                    .load();
+                    .load();*/
+
             return rootView;
         }
+
+        /**Crear pdf*/
+        void writePdf(String pdf, String tipo){
+            //Convert de string a bytes
+            FileOutputStream fos = null;
+            try {
+                /**crear directorio*/
+                File path= new File("/mnt/sdcard/misboletas/");
+                if ( !path.exists() ){ path.mkdir(); }
+                File file = new File(path,"Doc_"+tipo+".pdf");
+                fos = new FileOutputStream(file);
+                byte[] pdfAsBytes = Base64.decode(pdf, 0);
+                fos.write(pdfAsBytes);
+                fos.flush();
+                fos.close();
+                loadPdfCreate(tipo);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        void loadPdfCreate(String tipo){
+            File path= new File("/mnt/sdcard/misboletas/Doc_"+ tipo+ ".pdf");
+            pdfView.fromFile(path)
+                    .defaultPage(1)
+                    .showMinimap(false)
+                    .enableSwipe(true)
+                    .load();
+        }
     }
+
 
 }
