@@ -1,6 +1,8 @@
 package com.tincio.visualizarboletas.presentation.fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -53,6 +55,7 @@ public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFr
     ListadoBoletasPresenter presenter;
     ListadoBoletasRequest request = new ListadoBoletasRequest();
     List<WRHDocumento> lista;
+    SharedPreferences preferences;
     public ListadoBoletasFragment() {
         // Required empty public constructor
     }
@@ -72,6 +75,7 @@ public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFr
         layoutManager = new LinearLayoutManager(getContext());
         rcvBoletas.setLayoutManager(layoutManager);
         presenter= new ListadoBoletasPresenter(this);
+        preferences = getActivity().getSharedPreferences(getString(R.string.preferences_app), Context.MODE_PRIVATE);
         return view;
     }
 
@@ -101,10 +105,10 @@ public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFr
 
     void getListaBoletas(Boolean tipoLeido){
         try{
-            request.setIdEmpresa(5);
+            request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
             request.setCodAplicacion(1);
             request.setIdTipoDocumento("1");
-            request.setNroDocumentoIdentificacion("80605606");
+            request.setNroDocumentoIdentificacion(preferences.getString(getString(R.string.preferences_user),""));
             if(tipoLeido){
                 presenter.getListadoBoletas(request);
             }else{

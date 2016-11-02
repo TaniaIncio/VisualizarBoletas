@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,11 +13,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
-import com.tincio.visualizarboletas.presentation.fcm.MyFirebaseInstanceIDService;
 import com.tincio.visualizarboletas.presentation.presenter.LoginPresenter;
 import com.tincio.visualizarboletas.presentation.util.Utils;
 import com.tincio.visualizarboletas.presentation.view.LoginView;
@@ -52,12 +48,6 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         getSupportActionBar().hide();
         presenter = new LoginPresenter(this);
         preferences = getSharedPreferences(getString(R.string.preferences_app), MODE_PRIVATE);
-        //Log.i(TAG, Utils.getIp(this));
-        //inicar fcm
-        Intent intent = new Intent(this, MyFirebaseInstanceIDService.class);
-        startService(intent);
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-//        Log.i("token",refreshedToken);
     }
 
     @Override
@@ -80,11 +70,18 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
             request.setKeyIos("");
             request.setKeyAndroid("");
             presenter.logueoUser(request);
+            savePreferences();
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
+    void savePreferences(){
+        editor = preferences.edit();
+        editor.putString(getString(R.string.preferences_user), txtUsuario.getText().toString());
+        editor.putString(getString(R.string.preferences_pass), txtClave.getText().toString());
+        editor.commit();
+    }
     @Override
     public void getUsuarioLogueado(WRHUsuarioDatos userLogueado) {
         if(userLogueado.resultado){

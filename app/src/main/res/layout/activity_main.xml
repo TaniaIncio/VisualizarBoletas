@@ -66,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/colorPrimary"
                 android:hint="@string/title_contrasena"
+                android:inputType="textPassword"
                 android:text="80605606"/>
             <LinearLayout
                 android:layout_width="match_parent"

@@ -22,8 +22,11 @@
     <string name="title_empresa">Empresa</string>
 
     <!--archivo preferences-->
-    <string name="preferences_app">preferences_aapp</string>
+    <string name="preferences_app">preferences_app</string>
     <string name="preferences_idempresa">preferences_idempresa</string>
+    <string name="preferences_user">preferences_user</string>
+    <string name="preferences_pass">preferences_pass</string>
+    <string name="preferences_periodo">preferences_periodo</string>
 
     <string name="tab_boletas">Boleta</string>
     <string name="tab_cargo">Cargo</string>

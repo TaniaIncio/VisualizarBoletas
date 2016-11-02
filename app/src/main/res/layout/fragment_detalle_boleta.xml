@@ -3,6 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.tincio.visualizarboletas.presentation.fragment.DetalleBoletaFragment">
+   <android.support.v4.widget.SwipeRefreshLayout
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:id="@+id/swipe_refresh">   </android.support.v4.widget.SwipeRefreshLayout>
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,6 +28,7 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_marginRight="5dp"
+             android:id="@+id/icon_boleta"
              android:src="@mipmap/men_ico_services_off"/>
          <TextView
              android:layout_width="wrap_content"
@@ -45,7 +50,8 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_marginRight="5dp"
-             android:src="@mipmap/men_ico_services_off"/>
+             android:id="@+id/icon_cargo"
+             android:src="@mipmap/fav_ico_services_off"/>
          <TextView
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
@@ -61,4 +67,5 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent" />
 </LinearLayout>
+
 </FrameLayout>

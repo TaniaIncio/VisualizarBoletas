@@ -44,13 +44,5 @@ dependencies {
 //install ksoap2
 dependencies {
     compile files('libs/ksoap2-android-assembly-3.6.1-jar-with-dependencies.jar')
-    compile 'com.google.firebase:firebase-core:9.6.1'
-    compile 'com.google.firebase:firebase-messaging:9.6.0'
     compile 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
 }
-
-dependencies {
-    compile 'com.google.android.gms:play-services:9.6.1'
-    compile 'com.android.support:appcompat-v7:24.+'
-}
-apply plugin: 'com.google.gms.google-services'
