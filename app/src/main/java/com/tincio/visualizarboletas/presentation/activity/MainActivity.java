@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.order_movies,R.layout.row_spinner_empresa);
         spinnerEmpresa.setAdapter(adapter);
         spinnerEmpresa.setOnItemSelectedListener(this);
+        spinnerEmpresa.setSelection(preferences.getInt(getString(R.string.preferences_idempresa),1)-1);
     }
 
     @OnClick(R.id.btn_login)

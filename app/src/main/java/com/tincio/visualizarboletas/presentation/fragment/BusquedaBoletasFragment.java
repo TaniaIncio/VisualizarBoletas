@@ -1,6 +1,9 @@
+
 package com.tincio.visualizarboletas.presentation.fragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -42,6 +45,7 @@ public class BusquedaBoletasFragment extends Fragment implements ListadoBoletasB
     RecyclerView.LayoutManager layoutManager;
     RecyclerBoletasAdapter adapter;
 
+    SharedPreferences preferences;
     ListadoBoletasBusquedaPresenter presenter;
     public BusquedaBoletasFragment() {
         // Required empty public constructor
@@ -57,6 +61,7 @@ public class BusquedaBoletasFragment extends Fragment implements ListadoBoletasB
         presenter = new ListadoBoletasBusquedaPresenter(this);
         layoutManager = new LinearLayoutManager(getContext());
         rcvBoletas.setLayoutManager(layoutManager);
+        preferences = getActivity().getSharedPreferences(getString(R.string.preferences_app), Context.MODE_PRIVATE);
         return view;
     }
 
@@ -81,8 +86,8 @@ public class BusquedaBoletasFragment extends Fragment implements ListadoBoletasB
     void checkBusqueda(){
         if(spinnerMes.getSelectedIndex()!=0 && spinnerAnio.getSelectedIndex()!=0){
             ListadoBoletasBusquedaRequest request = new ListadoBoletasBusquedaRequest();
-            request.setNroDocumentoIdentificacion("80605606");
-            request.setIdEmpresa(5);
+            request.setNroDocumentoIdentificacion(preferences.getString(getString(R.string.preferences_user),""));
+            request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
             request.setIdTipoDocumento("1");
             Log.i("anio y mes",spinnerMes.getSelectedIndex()+" "+spinnerAnio.getItems().get(spinnerAnio.getSelectedIndex()).toString()+"_"+
                     spinnerMes.getItems().get(spinnerMes.getSelectedIndex()).toString());
@@ -95,12 +100,11 @@ public class BusquedaBoletasFragment extends Fragment implements ListadoBoletasB
             rcvBoletas.setVisibility(View.GONE);
         }
     }
-    void visualizarBoleta(){
-        /*Uri uri = Uri.parse("http://www.google.com");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);*/
+    void visualizarBoleta(String periodo){
         FragmentTransaction Ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Ft.replace(R.id.frame_base, new DetalleBoletaFragment(), TAG);
+        Bundle bunde = new Bundle();
+        bunde.putString("periodo_envio",periodo);
+        Ft.replace(R.id.frame_base, DetalleBoletaFragment.newInstance(bunde), TAG);
         Ft.addToBackStack(TAG);
         Ft.commit();
     }
@@ -108,12 +112,13 @@ public class BusquedaBoletasFragment extends Fragment implements ListadoBoletasB
     @Override
     public void getListaDocumentos(WRHgetListadoDocumentosMobileResponse documentos) {
         adapter = new RecyclerBoletasAdapter(documentos);
+
         rcvBoletas.setAdapter(adapter);
         rcvBoletas.setVisibility(View.VISIBLE);
         adapter.setOnItemClickLIstener(new RecyclerBoletasAdapter.OnItemClickListener() {
             @Override
             public void setOnItemClickListener(WRHDocumento Boleta) {
-                visualizarBoleta();
+                visualizarBoleta(Boleta.periodo);
             }
         });
     }

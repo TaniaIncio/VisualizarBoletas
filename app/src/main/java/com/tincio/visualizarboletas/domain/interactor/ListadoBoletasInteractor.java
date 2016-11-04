@@ -2,10 +2,12 @@ package com.tincio.visualizarboletas.domain.interactor;
 
 import android.os.AsyncTask;
 
+import com.tincio.visualizarboletas.data.request.ListadoBoletasBusquedaRequest;
 import com.tincio.visualizarboletas.data.request.ListadoBoletasRequest;
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
 import com.tincio.visualizarboletas.data.services.WRHWSAutenticacionSoap11Binding;
+import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosMobileResponse;
 import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosNoRevisadosResponse;
 import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosResponse;
 import com.tincio.visualizarboletas.domain.callback.ListadoBoletasCallback;
@@ -22,7 +24,7 @@ public class ListadoBoletasInteractor {
         this.callback = callback;
     }
 
-    public void getListadoBoletas(ListadoBoletasRequest request){
+    public void getListadoBoletas(ListadoBoletasBusquedaRequest request){
         ListadoBoletasTask task = new ListadoBoletasTask(request);
         task.execute();
     }
@@ -32,7 +34,37 @@ public class ListadoBoletasInteractor {
         task.execute();
     }
 
-    private class ListadoBoletasTask extends AsyncTask<Void, Void, WRHgetListadoDocumentosResponse>{
+    private class ListadoBoletasTask extends AsyncTask<Void, Void, WRHgetListadoDocumentosMobileResponse>{
+
+        ListadoBoletasBusquedaRequest request= null;
+        ListadoBoletasTask(ListadoBoletasBusquedaRequest request){
+            this.request = request;
+        }
+
+        @Override
+        protected WRHgetListadoDocumentosMobileResponse doInBackground(Void... voids) {
+            WRHgetListadoDocumentosMobileResponse datos=null;
+            try{
+                WRHWSAutenticacionSoap11Binding soap11Binding = new WRHWSAutenticacionSoap11Binding();
+                datos=  soap11Binding.getListadoDocumentosMobile(request.getIdEmpresa(), request.getNroDocumentoIdentificacion(), request.getIdTipoDocumento(), request.getPeriodo());
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return datos;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(WRHgetListadoDocumentosMobileResponse datos) {
+            callback.onResponse(datos);
+        }
+    }
+    /*private class ListadoBoletasTask extends AsyncTask<Void, Void, WRHgetListadoDocumentosResponse>{
 
         ListadoBoletasRequest request= null;
         ListadoBoletasTask(ListadoBoletasRequest request){
@@ -62,7 +94,7 @@ public class ListadoBoletasInteractor {
         protected void onPostExecute(WRHgetListadoDocumentosResponse datos) {
             callback.onResponse(datos);
         }
-    }
+    }*/
 
     //boletas no leidas
     private class ListadoBoletasNoLeidosTask extends AsyncTask<Void, Void, WRHgetListadoDocumentosNoRevisadosResponse>{

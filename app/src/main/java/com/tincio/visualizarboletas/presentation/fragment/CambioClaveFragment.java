@@ -35,7 +35,7 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
     CambioClavePresenter presenter;
     SharedPreferences preferences;
 
-    public static final String TAG=CambioClaveFragment.class.getSimpleName();
+    public static final String TAG="Cambio de Clave";
     public CambioClaveFragment() {
         // Required empty public constructor
     }
@@ -55,7 +55,7 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
     void onClickGuardarClave(){
         if(verificar()){
             CambioClaveRequest request = new CambioClaveRequest();
-            request.setCodAplicacion("1");
+            request.setCodAplicacion("2");
             request.setClave(txtClaveActual.getText().toString());
             request.setIdEmpresa(String.valueOf(preferences.getInt(getString(R.string.preferences_idempresa),1)));
             request.setNomUsuario(txtClaveActual.getText().toString());

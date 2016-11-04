@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.joanzapata.pdfview.PDFView;
+import com.joanzapata.pdfview.listener.OnLoadCompleteListener;
+import com.joanzapata.pdfview.listener.OnPageChangeListener;
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.DetalleBoletasRequest;
 import com.tincio.visualizarboletas.data.services.JHADocumentoWS;
@@ -44,7 +46,7 @@ import butterknife.OnClick;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFragmentView{
+public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFragmentView, OnLoadCompleteListener, OnPageChangeListener{
 
     public static final String TAG= DetalleBoletaFragment.class.getSimpleName();
     public static PDFView pdfView;
@@ -58,18 +60,27 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
 
     ImageView iconBoleta;
     ImageView iconCargo;
+    String periodoEnvio;
 
     SharedPreferences preferences;
+    View view;
+    double random ;
     public DetalleBoletaFragment() {
         // Required empty public constructor
     }
 
+    public static DetalleBoletaFragment newInstance(Bundle args){
+        DetalleBoletaFragment fragment = new DetalleBoletaFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_detalle_boleta, container, false);
+        view =  inflater.inflate(R.layout.fragment_detalle_boleta, container, false);
         ButterKnife.bind(this,view);
+        random = Math.random();
         mDemoCollectionPagerAdapter =
                 new DemoCollectionPagerAdapter(
                         getActivity().getSupportFragmentManager());
@@ -100,6 +111,8 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
         });
 
         preferences = getActivity().getSharedPreferences(getString(R.string.preferences_app), Context.MODE_PRIVATE);
+        periodoEnvio = getArguments().getString("periodo_envio","");
+        obtenerPdf();
         return view;
     }
 
@@ -126,19 +139,19 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     @Override
     public void onResume() {
         super.onResume();
-        obtenerPdf();
+//        obtenerPdf();
     }
 
     void obtenerPdf(){
         progress = Utils.showProgressDialog(getActivity());
         DetalleBoletasRequest request = new DetalleBoletasRequest();
-        request.setCodAplicacion(1);
+        request.setCodAplicacion(2);
         request.setClave(preferences.getString(getString(R.string.preferences_pass),""));
         request.setDniUsuario(preferences.getString(getString(R.string.preferences_user),""));
         request.setIdTipoDocumento(1);
-        request.setIpUsuario("");
+        request.setIpUsuario(Utils.getIp(getContext()));
         request.setIsEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
-        request.setsPeriodo(preferences.getString(getString(R.string.preferences_periodo),"2001_0927"));//2001_0927
+        request.setsPeriodo(preferences.getString(getString(R.string.preferences_periodo),periodoEnvio));//2001_0927
         presenter.getDetalleBoletas(request);
     }
 
@@ -166,6 +179,16 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void loadComplete(int nbPages) {
+
+    }
+
+    @Override
+    public void onPageChanged(int page, int pageCount) {
+
     }
 
     public class DemoCollectionPagerAdapter extends FragmentPagerAdapter {
@@ -228,6 +251,7 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
             View rootView = inflater.inflate(
                     R.layout.fragment_detalle_boleta_tab, container, false);
             pdfView = (PDFView)rootView.findViewById(R.id.pdfview);
+
             return rootView;
         }
     }
@@ -284,13 +308,18 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     void loadPdfCreate(String tipo){
         File path= new File("/mnt/sdcard/misboletas/Doc_"+ tipo+ ".pdf");
 
+
         if(tipo.equals("boleta")){
+          //  pdfView = (PDFView)view.findViewById(R.id.pdfview);
             pdfView.fromFile(path)
                     .defaultPage(1)
                     .showMinimap(false)
                     .enableSwipe(true)
+                    .onLoad(this)
+                    .onPageChange(this)
                     .load();
         }else{
+            //pdfViewCargo = (PDFView)view.findViewById(R.id.pdfview_cargo);
             pdfViewCargo.fromFile(path)
                     .defaultPage(1)
                     .showMinimap(false)

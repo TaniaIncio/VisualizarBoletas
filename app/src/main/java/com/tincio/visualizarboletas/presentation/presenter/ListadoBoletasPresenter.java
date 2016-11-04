@@ -1,8 +1,10 @@
 package com.tincio.visualizarboletas.presentation.presenter;
 
+import com.tincio.visualizarboletas.data.request.ListadoBoletasBusquedaRequest;
 import com.tincio.visualizarboletas.data.request.ListadoBoletasRequest;
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
+import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosMobileResponse;
 import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosNoRevisadosResponse;
 import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosResponse;
 import com.tincio.visualizarboletas.domain.callback.ListadoBoletasCallback;
@@ -21,7 +23,7 @@ public class ListadoBoletasPresenter implements ListadoBoletasCallback{
         interactor = new ListadoBoletasInteractor(this);
     }
 
-    public void getListadoBoletas(ListadoBoletasRequest request){
+    public void getListadoBoletas(ListadoBoletasBusquedaRequest request){
         interactor.getListadoBoletas(request);
     }
 
@@ -29,11 +31,15 @@ public class ListadoBoletasPresenter implements ListadoBoletasCallback{
         interactor.getListadoBoletasNoLeidos(request);
     }
 
-    @Override
+    /*@Override
     public void onResponse(WRHgetListadoDocumentosResponse listaDocumentos) {
             view.getListaDocumentos(listaDocumentos);
     }
-
+*/
+    @Override
+    public void onResponse(WRHgetListadoDocumentosMobileResponse listaDocumentos) {
+        view.getListaDocumentos(listaDocumentos);
+    }
     @Override
     public void onResponseNoLeidos(WRHgetListadoDocumentosNoRevisadosResponse listaDocumentos) {
         view.getListaDocumentosNoLeidos(listaDocumentos);

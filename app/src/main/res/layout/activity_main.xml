@@ -53,7 +53,7 @@
                 android:textColorHint="@color/colorPrimary"
                 android:layout_marginBottom="@dimen/marg_title_login"
                 android:hint="@string/title_usuario"
-                android:text="80605606"/>
+                tools:text="80605606"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:textColorHint="@color/colorPrimary"
                 android:hint="@string/title_contrasena"
                 android:inputType="textPassword"
-                android:text="80605606"/>
+                tools:text="80605606"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

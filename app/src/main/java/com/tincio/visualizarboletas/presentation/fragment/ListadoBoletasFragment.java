@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.tincio.visualizarboletas.R;
+import com.tincio.visualizarboletas.data.request.ListadoBoletasBusquedaRequest;
 import com.tincio.visualizarboletas.data.request.ListadoBoletasRequest;
 import com.tincio.visualizarboletas.data.services.WRHDocumento;
+import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosMobileResponse;
 import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosNoRevisadosResponse;
 import com.tincio.visualizarboletas.data.services.WRHgetListadoDocumentosResponse;
 import com.tincio.visualizarboletas.presentation.adapter.RecyclerBoletasAdapter;
@@ -105,13 +108,22 @@ public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFr
 
     void getListaBoletas(Boolean tipoLeido){
         try{
-            request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
-            request.setCodAplicacion(1);
+          /*  request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
+            request.setCodAplicacion(2);
             request.setIdTipoDocumento("1");
-            request.setNroDocumentoIdentificacion(preferences.getString(getString(R.string.preferences_user),""));
+            request.setNroDocumentoIdentificacion(preferences.getString(getString(R.string.preferences_user),""));*/
+            ListadoBoletasBusquedaRequest request2 = new ListadoBoletasBusquedaRequest();
+            request2.setNroDocumentoIdentificacion(preferences.getString(getString(R.string.preferences_user),""));
+            request2.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
+            request2.setIdTipoDocumento("1");
+            request2.setPeriodo("");
             if(tipoLeido){
-                presenter.getListadoBoletas(request);
+                presenter.getListadoBoletas(request2);
             }else{
+                request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),5));
+                request.setCodAplicacion(2);
+                request.setIdTipoDocumento("1");
+                request.setNroDocumentoIdentificacion(preferences.getString(getString(R.string.preferences_user),""));
                 presenter.getListadoBoletasNoLeidos(request);
             }
 
@@ -120,17 +132,16 @@ public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFr
         }
     }
 
-    void visualizarBoleta(){
-        /*Uri uri = Uri.parse("http://www.google.com");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);*/
+    void visualizarBoleta(String periodo){
         FragmentTransaction Ft = getActivity().getSupportFragmentManager().beginTransaction();
-        Ft.replace(R.id.frame_base, new DetalleBoletaFragment(), TAG);
+        Bundle bunde = new Bundle();
+        bunde.putString("periodo_envio",periodo);
+        Ft.replace(R.id.frame_base, DetalleBoletaFragment.newInstance(bunde), TAG);
         Ft.addToBackStack(TAG);
         Ft.commit();
     }
 
-    @Override
+   /* @Override
     public void getListaDocumentos(WRHgetListadoDocumentosResponse documentos) {
         lista =documentos;
         adapter = new RecyclerBoletasAdapter(lista);
@@ -138,7 +149,20 @@ public class ListadoBoletasFragment extends Fragment implements ListadoBoletasFr
         adapter.setOnItemClickLIstener(new RecyclerBoletasAdapter.OnItemClickListener() {
             @Override
             public void setOnItemClickListener(WRHDocumento Boleta) {
-                visualizarBoleta();
+                visualizarBoleta(Boleta.periodo);
+            }
+        });
+    }*/
+
+    @Override
+    public void getListaDocumentos(WRHgetListadoDocumentosMobileResponse documentos) {
+        lista =documentos;
+        adapter = new RecyclerBoletasAdapter(lista);
+        rcvBoletas.setAdapter(adapter);
+        adapter.setOnItemClickLIstener(new RecyclerBoletasAdapter.OnItemClickListener() {
+            @Override
+            public void setOnItemClickListener(WRHDocumento Boleta) {
+                visualizarBoleta(Boleta.periodo);
             }
         });
     }
