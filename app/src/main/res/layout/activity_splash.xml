@@ -5,30 +5,29 @@
     android:layout_height="match_parent"
     tools:context="com.tincio.visualizarboletas.presentation.activity.SplashActivity">
     <com.flaviofaria.kenburnsview.KenBurnsView
-        android:src="@mipmap/workers"
+        android:src="@drawable/image_background"
         android:id="@+id/imagen"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
     <ImageView
         android:id="@+id/logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:alpha="0.0"
         android:src="@mipmap/icono"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="20dp"
         tools:ignore="SpUsage" />
-
-    <TextView
-        android:id="@+id/welcome_text"
+    <com.github.ybq.android.spinkit.SpinKitView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Mis Boletas"
-        android:visibility="gone"
-        android:textSize="25sp"
-        android:layout_margin="5dp"
-        android:textColor="@android:color/white" />
+        app:SpinKit_Color="@android:color/white" />
+    </LinearLayout>
+
 </RelativeLayout>

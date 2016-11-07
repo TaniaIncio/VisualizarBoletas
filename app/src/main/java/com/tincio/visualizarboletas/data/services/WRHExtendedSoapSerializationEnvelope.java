@@ -20,9 +20,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Vector;
 import java.io.StringReader;
@@ -41,7 +39,9 @@ public class WRHExtendedSoapSerializationEnvelope extends SoapSerializationEnvel
         classNames.put("http://wsdocuservutil.gmd.com.pe^^getListadoDocumentosNoRevisadosResponse",WRHgetListadoDocumentosNoRevisadosResponse.class);
         classNames.put("http://wsdocuservutil.gmd.com.pe^^getListadoDocumentosMobileResponse",WRHgetListadoDocumentosMobileResponse.class);
         classNames.put("http://wsdocuservutil.gmd.com.pe^^getListadoDocumentosResponse",WRHgetListadoDocumentosResponse.class);
-    }   
+        classNames.put("http://wsdocuservutil.gmd.com.pe^^getEmpresasResponse",WRHgetEmpresasResponse.class);
+    //SoapObject __soapReq = new SoapObject("http://wsdocuservutil.gmd.com.pe", "getEmpresas");
+    }
 
     protected static final int QNAME_NAMESPACE = 0;
     private static final String TYPE_LABEL = "type";

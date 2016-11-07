@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import com.tincio.visualizarboletas.R;
+import com.tincio.visualizarboletas.data.services.WWOEmpresa;
 import com.tincio.visualizarboletas.presentation.adapter.OpcionMenuAdapter;
 import com.tincio.visualizarboletas.data.model.OpcionMenu;
 import com.tincio.visualizarboletas.presentation.fragment.BusquedaBoletasFragment;

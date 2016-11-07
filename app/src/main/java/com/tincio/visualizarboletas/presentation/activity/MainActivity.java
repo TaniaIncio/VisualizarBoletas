@@ -16,9 +16,14 @@ import android.widget.Toast;
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
+import com.tincio.visualizarboletas.data.services.WWOEmpresa;
+import com.tincio.visualizarboletas.presentation.VisualizarBoletasApplication;
+import com.tincio.visualizarboletas.presentation.adapter.EmpresasAdapter;
 import com.tincio.visualizarboletas.presentation.presenter.LoginPresenter;
 import com.tincio.visualizarboletas.presentation.util.Utils;
 import com.tincio.visualizarboletas.presentation.view.LoginView;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -40,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
+
+    ArrayList<WWOEmpresa> listaEmpresa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,17 +55,31 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
         getSupportActionBar().hide();
         presenter = new LoginPresenter(this);
         preferences = getSharedPreferences(getString(R.string.preferences_app), MODE_PRIVATE);
+        if(VisualizarBoletasApplication.getEmpresas()==null){
+            listaEmpresa = getIntent().getParcelableArrayListExtra("listaEmpresa");
+        }else{
+            listaEmpresa = VisualizarBoletasApplication.getEmpresas();
+        }
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.order_movies,R.layout.row_spinner_empresa);
+        EmpresasAdapter adapter = new EmpresasAdapter(this,R.layout.row_spinner_empresa, listaEmpresa);
         spinnerEmpresa.setAdapter(adapter);
         spinnerEmpresa.setOnItemSelectedListener(this);
-        spinnerEmpresa.setSelection(preferences.getInt(getString(R.string.preferences_idempresa),1)-1);
+        checkSelectionEmpresa();
     }
 
+    void checkSelectionEmpresa(){
+        for (int i =0; i<listaEmpresa.size();i++){
+            if(listaEmpresa.get(i).id_empresa.equals(String.valueOf(preferences.getInt(getString(R.string.preferences_idempresa),0))))
+            {
+                spinnerEmpresa.setSelection(i);
+            }
+        }
+    }
     @OnClick(R.id.btn_login)
     void logueo(){
         try{
@@ -111,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         editor = preferences.edit();
-        editor.putInt(getString(R.string.preferences_idempresa), i+1);
+        editor.putInt(getString(R.string.preferences_idempresa), Integer.parseInt(this.listaEmpresa.get(i).id_empresa));
         editor.commit();
     }
 

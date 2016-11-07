@@ -507,30 +507,35 @@ public class WRHWSAutenticacionSoap11Binding
         }) ;
     }
     
-    public WWOEmpresa getEmpresas( ) throws Exception
+    public WRHgetEmpresasResponse getEmpresas( ) throws Exception
     {
-        return (WWOEmpresa)execute(new WRHIWcfMethod()
+        return (WRHgetEmpresasResponse)execute(new WRHIWcfMethod()
         {
             @Override
             public WRHExtendedSoapSerializationEnvelope CreateSoapEnvelope(){
                 WRHExtendedSoapSerializationEnvelope __envelope = createEnvelope();
-                SoapObject __soapReq = new SoapObject("http://wsdocuservutil.gmd.com.pe", "getEmpresas");
-                __envelope.setOutputSoapObject(__soapReq);
+                /*SoapObject __soapReq = new SoapObject("http://wsdocuservutil.gmd.com.pe", "getEmpresas");
+                __envelope.setOutputSoapObject(__soapReq);*/
+
+
+              /*  PropertyInfo __info=null;
+                __info = new PropertyInfo();
+                __soapReq.addProperty(__info);*/
 
                 return __envelope;
             }
 
             @Override
             public Object ProcessResult(WRHExtendedSoapSerializationEnvelope __envelope, Object result) throws Exception {
-                return (WWOEmpresa)getResult(WWOEmpresa.class,result,"return",__envelope);
+                return (WRHgetEmpresasResponse)getResult(WRHgetEmpresasResponse.class,result,"getEmpresasResponse",__envelope);
             }
         },"urn:getEmpresas");
     }
     
-    public android.os.AsyncTask< Void, Void, WRHOperationResult< WWOEmpresa>> getEmpresasAsync()
+    public android.os.AsyncTask< Void, Void, WRHOperationResult<WRHgetEmpresasResponse>> getEmpresasAsync()
     {
-        return executeAsync(new WRHFunctions.IFunc< WWOEmpresa>() {
-            public WWOEmpresa Func() throws Exception {
+        return executeAsync(new WRHFunctions.IFunc<WRHgetEmpresasResponse>() {
+            public WRHgetEmpresasResponse Func() throws Exception {
                 return getEmpresas( );
             }
         });
