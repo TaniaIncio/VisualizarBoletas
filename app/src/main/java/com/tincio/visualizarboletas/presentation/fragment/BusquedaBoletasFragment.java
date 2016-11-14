@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -81,6 +82,8 @@ public class BusquedaBoletasFragment extends Fragment implements ListadoBoletasB
                 checkBusqueda();
             }
         });
+        //getActivity().getSupportActionBar().setTitle(TAG.equals("NOTAG")?"Mis Boletas":TAG);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(TAG);
     }
 
     void checkBusqueda(){

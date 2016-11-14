@@ -4,6 +4,7 @@ package com.tincio.visualizarboletas.presentation.fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +49,7 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
         ButterKnife.bind(this, view);
         presenter = new CambioClavePresenter(this);
         preferences = getActivity().getSharedPreferences(getString(R.string.preferences_app), getActivity().MODE_PRIVATE);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(TAG);
         return view;
     }
 
@@ -58,7 +60,7 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
             request.setCodAplicacion("2");
             request.setClave(txtClaveActual.getText().toString());
             request.setIdEmpresa(String.valueOf(preferences.getInt(getString(R.string.preferences_idempresa),1)));
-            request.setNomUsuario(txtClaveActual.getText().toString());
+            request.setNomUsuario(preferences.getString(getString(R.string.preferences_user),""));
             request.setNuevaClave(txtClaveNueva.getText().toString());
             presenter.cambioClave(request);
         }
@@ -68,9 +70,10 @@ public class CambioClaveFragment extends Fragment implements CambioClaveView{
     @Override
     public void responseCambioClave(WWOUsuarioClave clave) {
         if(clave.resultado){
+            Toast.makeText(getActivity(),"Se realizo el cambio de clave", Toast.LENGTH_SHORT).show();
             getActivity().onBackPressed();
         }else{
-            Toast.makeText(getActivity(),"", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),"Error al validar la clave. Reintente", Toast.LENGTH_SHORT).show();
         }
     }
 

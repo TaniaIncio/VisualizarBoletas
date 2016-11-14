@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
     public void getUsuarioLogueado(WRHUsuarioDatos userLogueado) {
         if(userLogueado.resultado){
             startActivity(new Intent(this,NavigationMenuActivity.class));
+            finish();
         }else{
             Toast.makeText(this, "Usuario y/o clave incorrectos", Toast.LENGTH_SHORT).show();
         }

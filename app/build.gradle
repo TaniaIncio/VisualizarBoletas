@@ -47,6 +47,10 @@ dependencies {
     compile 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
 }
 //animation
-dependencies{
+dependencies {
     compile 'com.github.ybq:Android-SpinKit:1.1.0'
 }
+dependencies {
+    compile 'com.google.firebase:firebase-messaging:9.2.1'
+}
+apply plugin: 'com.google.gms.google-services'

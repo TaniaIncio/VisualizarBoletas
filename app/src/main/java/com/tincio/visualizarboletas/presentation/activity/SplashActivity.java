@@ -57,12 +57,14 @@ public class SplashActivity extends AppCompatActivity implements SplashView{
 
     @Override
     public void getEmpresas(WRHgetEmpresasResponse empresas) {
-        Log.i("total",empresas.size()+"");
-        listaEmpresa= new ArrayList<WWOEmpresa>(empresas);
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putParcelableArrayListExtra("listaEmpresa",listaEmpresa);
-        startActivity(intent);
-        VisualizarBoletasApplication.setEmpresas(listaEmpresa);
-        finish();
+        if(empresas.size()>0){
+            listaEmpresa= new ArrayList<WWOEmpresa>(empresas);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putParcelableArrayListExtra("listaEmpresa",listaEmpresa);
+            startActivity(intent);
+            VisualizarBoletasApplication.setEmpresas(listaEmpresa);
+            finish();
+        }
+
     }
 }

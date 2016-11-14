@@ -12,7 +12,7 @@
     <dimen name="pad_btn_login">20dp</dimen>
     <dimen name="height_icon_login">80dp</dimen>
     <dimen name="width_icon_login">80dp</dimen>
-    <dimen name ="marg_view_login">20dp</dimen>
+    <dimen name="marg_view_login">20dp</dimen>
     <dimen name="margin_general_right_left">16dp</dimen>
 
 </resources>

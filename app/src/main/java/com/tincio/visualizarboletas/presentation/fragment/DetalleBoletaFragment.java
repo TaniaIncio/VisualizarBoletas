@@ -4,24 +4,26 @@ package com.tincio.visualizarboletas.presentation.fragment;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.pdf.PdfDocument;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.joanzapata.pdfview.PDFView;
 import com.joanzapata.pdfview.listener.OnLoadCompleteListener;
@@ -29,6 +31,7 @@ import com.joanzapata.pdfview.listener.OnPageChangeListener;
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.DetalleBoletasRequest;
 import com.tincio.visualizarboletas.data.services.JHADocumentoWS;
+import com.tincio.visualizarboletas.presentation.activity.MainActivity;
 import com.tincio.visualizarboletas.presentation.presenter.DetalleBoletasPresenter;
 import com.tincio.visualizarboletas.presentation.util.Utils;
 import com.tincio.visualizarboletas.presentation.view.DetalleBoletasFragmentView;
@@ -37,8 +40,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -48,7 +49,7 @@ import butterknife.OnClick;
  */
 public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFragmentView, OnLoadCompleteListener, OnPageChangeListener{
 
-    public static final String TAG= DetalleBoletaFragment.class.getSimpleName();
+    public static final String TAG= "Detalle de Boleta";/// DetalleBoletaFragment.class.getSimpleName();
     public static PDFView pdfView;
     public static PDFView pdfViewCargo;
     DemoCollectionPagerAdapter mDemoCollectionPagerAdapter;
@@ -64,7 +65,21 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
 
     SharedPreferences preferences;
     View view;
-    double random ;
+    String tipo;
+    Boolean download=false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_download).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
     public DetalleBoletaFragment() {
         // Required empty public constructor
     }
@@ -78,9 +93,9 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         view =  inflater.inflate(R.layout.fragment_detalle_boleta, container, false);
         ButterKnife.bind(this,view);
-        random = Math.random();
         mDemoCollectionPagerAdapter =
                 new DemoCollectionPagerAdapter(
                         getActivity().getSupportFragmentManager());
@@ -89,6 +104,9 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
         presenter = new DetalleBoletasPresenter(this);
         iconBoleta = (ImageView) view.findViewById(R.id.icon_boleta);
         iconCargo = (ImageView) view.findViewById(R.id.icon_cargo);
+        pdfView = (PDFView)view.findViewById(R.id.pdfviewboleta);
+        pdfViewCargo = (PDFView)view.findViewById(R.id.pdfviewcargo);
+        tipo = "B";
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -116,15 +134,43 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
         return view;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_download) {
+            download = true;
+            if(tipo.equals("B")){
+                writePdf(stringBase64Boleta,tipo);
+            }else{
+                writePdf(stringBase64Cargo,tipo);
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @OnClick(R.id.linear_cargo)
     void onClickCargo(){
         mViewPager.setCurrentItem(1);
-        changeIcon("C");
+        tipo = "C";
+        changeIcon(tipo);
+        //
+        pdfView.setVisibility(View.GONE);
+        pdfViewCargo.setVisibility(View.VISIBLE);
     }
     @OnClick(R.id.linear_boleta)
     void onClickBoleta(){
         mViewPager.setCurrentItem(0);
-        changeIcon("B");
+        tipo = "B";
+        changeIcon(tipo);
+
+        pdfView.setVisibility(View.VISIBLE);
+        pdfViewCargo.setVisibility(View.GONE);
     }
 
     void changeIcon(String tipo){
@@ -139,7 +185,7 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     @Override
     public void onResume() {
         super.onResume();
-//        obtenerPdf();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(TAG);
     }
 
     void obtenerPdf(){
@@ -158,24 +204,25 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     @Override
     public void getBoletasPdf(JHADocumentoWS boletaPdf) {
         try {
-            int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+/*            int permission = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             if (permission != PackageManager.PERMISSION_GRANTED) {
                 // We don't have permission so prompt the user
-               /* ActivityCompat.requestPermissions(
+               *//* ActivityCompat.requestPermissions(
                         activity,
                         PERMISSIONS_STORAGE,
                         REQUEST_EXTERNAL_STORAGE
-                );*/
-            }
+                );*//*
+            }*/
             if(progress!=null)
                 progress.dismiss();
             //+ "/Sample.pdf"
-            writePdf(boletaPdf.bytesDocumento,"boleta");
-            writePdf(boletaPdf.bytesAcuse,"cargo");
+            writePdf(boletaPdf.bytesDocumento,"B");
+            writePdf(boletaPdf.bytesAcuse,"C");
 
             stringBase64Boleta = boletaPdf.bytesDocumento;
             stringBase64Cargo = boletaPdf.bytesAcuse;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -288,16 +335,25 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     void writePdf(String pdf, String tipo){
         //Convert de string a bytes
         FileOutputStream fos = null;
+        File path;
         try {
-            File path= new File("/mnt/sdcard/misboletas/");
+            //File path= new File("/mnt/sdcard/misboletas/");
+            //File path = new File(""+getActivity().getFilesDir());
+            if(download){
+                path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+            }else
+                path = new File(""+getActivity().getFilesDir());
             if ( !path.exists() ){ path.mkdir(); }
-            File file = new File(path,"Doc_"+tipo+".pdf");
+            File file = new File(path,(tipo.equals("B")?"BOL":"CARGO")+ "_"+(download?periodoEnvio:tipo)+".pdf");
             fos = new FileOutputStream(file);
             byte[] pdfAsBytes = Base64.decode(pdf, 0);
             fos.write(pdfAsBytes);
             fos.flush();
             fos.close();
-            loadPdfCreate(tipo);
+            if(download==false)
+                loadPdfCreate(tipo);
+            else
+                Toast.makeText(getActivity(),"Archivo guardado en Descargas",Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -306,10 +362,13 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
     }
 
     void loadPdfCreate(String tipo){
-        File path= new File("/mnt/sdcard/misboletas/Doc_"+ tipo+ ".pdf");
+        //File path= new File("/mnt/sdcard/misboletas/Doc_"+ tipo+ ".pdf");
+        //File path = new File(getActivity().getFilesDir(), "Doc_"+ tipo+ ".pdf");
+        File path;
+        path = new File(""+getActivity().getFilesDir(), (tipo.equals("B")?"BOL":"CARGO")+ "_"+ (download?periodoEnvio:tipo)+ ".pdf");
 
 
-        if(tipo.equals("boleta")){
+        if(tipo.equals("B")){
           //  pdfView = (PDFView)view.findViewById(R.id.pdfview);
             pdfView.fromFile(path)
                     .defaultPage(1)
@@ -326,8 +385,7 @@ public class DetalleBoletaFragment extends Fragment implements DetalleBoletasFra
                     .enableSwipe(true)
                     .load();
         }
-
+        download = false;
     }
-
 
 }

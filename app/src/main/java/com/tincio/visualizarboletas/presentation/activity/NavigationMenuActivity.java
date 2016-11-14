@@ -1,5 +1,6 @@
 package com.tincio.visualizarboletas.presentation.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,11 +11,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.services.WWOEmpresa;
 import com.tincio.visualizarboletas.presentation.adapter.OpcionMenuAdapter;
@@ -41,6 +47,9 @@ public class NavigationMenuActivity extends AppCompatActivity
     @Bind(R.id.drawer_layout)
     DrawerLayout drawer;
     SharedPreferences prefs;
+
+    MenuView.ItemView item;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,8 +117,22 @@ public class NavigationMenuActivity extends AppCompatActivity
                     changeFragment(new CambioClaveFragment(), CambioClaveFragment.TAG);
                     break;
                 case 4:
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
+                    new AlertDialog.Builder(this)
+                            .setTitle("Cerrar Sesión")
+                            .setMessage("¿Esta seguro de salir?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(NavigationMenuActivity.this, MainActivity.class));
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
                     break;
 
             }
@@ -122,6 +145,9 @@ public class NavigationMenuActivity extends AppCompatActivity
         try {
             FragmentTransaction Ft = getSupportFragmentManager().beginTransaction();
             Ft.replace(R.id.frame_base, fragment, TAG);
+            if(!TAG.equals("NOTAG")){
+                Ft.addToBackStack(TAG);
+            }
             Ft.commit();
             getSupportActionBar().setTitle(TAG.equals("NOTAG")?"Mis Boletas":TAG);
         } catch (Exception e) {
@@ -140,23 +166,23 @@ public class NavigationMenuActivity extends AppCompatActivity
         }
     }
 
- /*   @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.navigation_menu, menu);
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_inicio) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+        if (id == R.id.action_download) {
+           *//* Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);*//*
             return true;
         }
 
