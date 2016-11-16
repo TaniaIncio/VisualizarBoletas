@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.tincio.visualizarboletas.R;
 import com.tincio.visualizarboletas.data.request.UserRequest;
 import com.tincio.visualizarboletas.data.services.WRHUsuarioDatos;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
     @OnClick(R.id.btn_login)
     void logueo(){
         try{
+            String token = FirebaseInstanceId.getInstance().getToken();
             UserRequest request = new UserRequest();
             request.setCodAplicacion(1);
             request.setIdEmpresa(preferences.getInt(getString(R.string.preferences_idempresa),1));
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements LoginView, Adapte
             request.setClave(txtClave.getText().toString());
             request.setIp(Utils.getIp(this));
             request.setKeyIos("");
-            request.setKeyAndroid("");
+            request.setKeyAndroid(token);
             presenter.logueoUser(request);
             savePreferences();
         }catch(Exception e){
